@@ -1,37 +1,38 @@
 package pedroPathing.tuners_tests.localization;
 
-import static com.pedropathing.follower.FollowerConstants.leftFrontMotorDirection;
 import static com.pedropathing.follower.FollowerConstants.leftFrontMotorName;
-import static com.pedropathing.follower.FollowerConstants.leftRearMotorDirection;
 import static com.pedropathing.follower.FollowerConstants.leftRearMotorName;
-import static com.pedropathing.follower.FollowerConstants.rightFrontMotorDirection;
 import static com.pedropathing.follower.FollowerConstants.rightFrontMotorName;
-import static com.pedropathing.follower.FollowerConstants.rightRearMotorDirection;
 import static com.pedropathing.follower.FollowerConstants.rightRearMotorName;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import static com.pedropathing.follower.FollowerConstants.leftFrontMotorDirection;
+import static com.pedropathing.follower.FollowerConstants.leftRearMotorDirection;
+import static com.pedropathing.follower.FollowerConstants.rightFrontMotorDirection;
+import static com.pedropathing.follower.FollowerConstants.rightRearMotorDirection;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.pedropathing.localization.PoseUpdater;
-import com.pedropathing.util.DashboardPoseTracker;
-import com.pedropathing.util.Drawing;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import com.pedropathing.localization.PoseUpdater;
+import com.pedropathing.util.DashboardPoseTracker;
+import com.pedropathing.util.Drawing;
+
+import java.util.Arrays;
+import java.util.List;
+
 import pedroPathing.constants.*;
 
 /**
  * This is the LocalizationTest OpMode. This is basically just a simple mecanum drive attached to a
- * PoseUpdater. The OpMode will print out the robot's pose to telemetry as well as draw the robot on
- * FTC Dashboard (192/168/43/1:8080/dash). You should use this to check the robot's localization.
+ * PoseUpdater. The OpMode will print out the robot's pose to telemetry as well as draw the robot
+ * on FTC Dashboard (192/168/43/1:8080/dash). You should use this to check the robot's localization.
  *
  * @author Anyi Lin - 10158 Scott's Bots
  * @version 1.0, 5/6/2024
@@ -54,6 +55,7 @@ public class LocalizationTest extends OpMode {
    */
   @Override
   public void init() {
+    Constants.setConstants(FConstants.class, LConstants.class);
     poseUpdater = new PoseUpdater(hardwareMap, FConstants.class, LConstants.class);
 
     dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
@@ -80,8 +82,7 @@ public class LocalizationTest extends OpMode {
     }
 
     telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
-    telemetryA.addLine(
-        "This will print your robot's position to telemetry while "
+    telemetryA.addLine("This will print your robot's position to telemetry while "
             + "allowing robot control through a basic mecanum drive on gamepad 1.");
     telemetryA.update();
 
@@ -90,8 +91,8 @@ public class LocalizationTest extends OpMode {
   }
 
   /**
-   * This updates the robot's pose estimate, the simple mecanum drive, and updates the FTC Dashboard
-   * telemetry with the robot's position as well as draws the robot's position.
+   * This updates the robot's pose estimate, the simple mecanum drive, and updates the FTC
+   * Dashboard telemetry with the robot's position as well as draws the robot's position.
    */
   @Override
   public void loop() {
