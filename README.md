@@ -1,6 +1,6 @@
-# CAESAR-CIRCUITRY-ITD-STATE
+# CAESAR-CIRCUITRY-ITD-OFFSEASON
 
-**Welcome to the CAESAR-CIRCUITRY-ITD-MICHIANA repository!**
+**Welcome to the CAESAR-CIRCUITRY-ITD-SEASON repository!**
 
 This repository provides a collection of code and resources developed by team 24331 Caesar Circuitry from the Alabama School of Cyber Technology and Engineering. We aim to share our code and best practices with the wider FTC community, fostering collaboration and innovation within the program.
 
