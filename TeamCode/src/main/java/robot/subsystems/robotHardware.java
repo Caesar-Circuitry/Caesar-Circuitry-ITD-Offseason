@@ -9,11 +9,13 @@ import robot.constants;
 public class robotHardware extends WSubsystem {
   private Follower m_follower;
   private output m_output;
+  private drive m_drive;
   private HardwareMap hardwareMap;
 
   public robotHardware(HardwareMap hardwareMap) {
     this.hardwareMap = hardwareMap;
     m_follower = new Follower(this.hardwareMap, Constants.fConstants, Constants.lConstants);
+    m_drive = new drive(this);
     m_output = new output(this);
   }
 
@@ -40,5 +42,8 @@ public class robotHardware extends WSubsystem {
 
   public Follower getFollower() {
     return m_follower;
+  }
+  public drive getDrive() {
+    return m_drive;
   }
 }

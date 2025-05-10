@@ -1,8 +1,9 @@
 package pedroPathing.custom;
 
 import com.pedropathing.util.CustomFilteredPIDFCoefficients;
+import com.pedropathing.util.FilteredPIDFController;
 
-public class FilteredSquidController {
+public class FilteredSquidController extends FilteredPIDFController {
         private CustomFilteredPIDFCoefficients coefficients;
 
         private double previousError;
@@ -23,7 +24,9 @@ public class FilteredSquidController {
          *
          * @param set the coefficients to use.
          */
+
         public FilteredSquidController(CustomFilteredPIDFCoefficients set) {
+            super(set);
             setCoefficients(set);
             reset();
         }
@@ -33,8 +36,9 @@ public class FilteredSquidController {
          *
          * @return this returns the value of the filtered PIDF from the current error.
          */
+        @Override
         public double runPIDF() {
-            return (Math.copySign(Math.sqrt(error),error)) * P() + filteredDerivative * D() + F();
+            return (Math.copySign(Math.sqrt(Math.abs(error)),error)) * P() + filteredDerivative * D() + F();
         }
 
         /**
@@ -44,6 +48,7 @@ public class FilteredSquidController {
          *
          * @param update This is the current position.
          */
+        @Override
         public void updatePosition(double update) {
             position = update;
             previousError = error;
@@ -64,12 +69,13 @@ public class FilteredSquidController {
          *
          * @param error The error specified.
          */
+        @Override
         public void updateError(double error) {
             previousError = this.error;
             this.error = error;
-
-            deltaTimeNano = System.nanoTime() - previousUpdateTimeNano;
-            previousUpdateTimeNano = System.nanoTime();
+            long currentTime = System.nanoTime();
+            deltaTimeNano = currentTime - previousUpdateTimeNano;
+            previousUpdateTimeNano = currentTime;
 
             errorIntegral += error * (deltaTimeNano / Math.pow(10.0, 9));
             previousDerivative = errorDerivative;
@@ -82,6 +88,7 @@ public class FilteredSquidController {
          *
          * @param input the input into the feedforward equation.
          */
+        @Override
         public void updateFeedForwardInput(double input) {
             feedForwardInput = input;
         }
@@ -89,6 +96,7 @@ public class FilteredSquidController {
         /**
          * This resets all the filtered PIDF's error and position values, as well as the time stamps.
          */
+        @Override
         public void reset() {
             previousError = 0;
             error = 0;
@@ -107,6 +115,7 @@ public class FilteredSquidController {
          *
          * @param set this sets the target position.
          */
+        @Override
         public void setTargetPosition(double set) {
             targetPosition = set;
         }
@@ -116,6 +125,7 @@ public class FilteredSquidController {
          *
          * @return this returns the target position.
          */
+        @Override
         public double getTargetPosition() {
             return targetPosition;
         }
@@ -125,6 +135,7 @@ public class FilteredSquidController {
          *
          * @param set the coefficients that the filtered PIDF will use.
          */
+        @Override
         public void setCoefficients(CustomFilteredPIDFCoefficients set) {
             coefficients = set;
         }
@@ -134,6 +145,7 @@ public class FilteredSquidController {
          *
          * @return this returns the current coefficients.
          */
+        @Override
         public CustomFilteredPIDFCoefficients getCoefficients() {
             return coefficients;
         }
@@ -143,6 +155,7 @@ public class FilteredSquidController {
          *
          * @param set this sets the P coefficient.
          */
+        @Override
         public void setP(double set) {
             coefficients.P = set;
         }
@@ -152,6 +165,7 @@ public class FilteredSquidController {
          *
          * @return this returns the P coefficient.
          */
+        @Override
         public double P() {
             return coefficients.P;
         }
@@ -161,6 +175,7 @@ public class FilteredSquidController {
          *
          * @param set this sets the I coefficient.
          */
+        @Override
         public void setI(double set) {
             coefficients.I = set;
         }
@@ -170,6 +185,7 @@ public class FilteredSquidController {
          *
          * @return this returns the I coefficient.
          */
+        @Override
         public double I() {
             return coefficients.I;
         }
@@ -179,6 +195,7 @@ public class FilteredSquidController {
          *
          * @param set this sets the D coefficient.
          */
+        @Override
         public void setD(double set) {
             coefficients.D = set;
         }
@@ -188,6 +205,7 @@ public class FilteredSquidController {
          *
          * @return this returns the D coefficient.
          */
+        @Override
         public double D() {
             return coefficients.D;
         }
@@ -197,6 +215,7 @@ public class FilteredSquidController {
          *
          * @param set this sets the time constant.
          */
+        @Override
         public void setT(double set) {
             coefficients.T = set;
         }
@@ -206,6 +225,7 @@ public class FilteredSquidController {
          *
          * @return this returns the time constant.
          */
+        @Override
         public double T() {
             return coefficients.T;
         }
@@ -215,6 +235,7 @@ public class FilteredSquidController {
          *
          * @param set this sets the F constant.
          */
+        @Override
         public void setF(double set) {
             coefficients.F = set;
         }
@@ -224,6 +245,7 @@ public class FilteredSquidController {
          *
          * @return this returns the F constant.
          */
+        @Override
         public double F() {
             return coefficients.getCoefficient(feedForwardInput);
         }
@@ -233,6 +255,7 @@ public class FilteredSquidController {
          *
          * @return this returns the error.
          */
+        @Override
         public double getError() {
             return error;
         }
