@@ -9,10 +9,10 @@ public class constants {
   }
 
   public static class DriveConstants {
-    public static final String leftFrontMotorName = "leftFront";
-    public static final String leftRearMotorName = "leftRear";
-    public static final String rightFrontMotorName = "rightFront";
-    public static final String rightRearMotorName = "rightRear";
+    public static final String leftFrontMotorName = "FLM";
+    public static final String leftRearMotorName = "BLM";
+    public static final String rightFrontMotorName = "FRM";
+    public static final String rightRearMotorName = "BRM";
 
     public static final DcMotorSimple.Direction leftFrontMotorDirection =
         DcMotorSimple.Direction.REVERSE;

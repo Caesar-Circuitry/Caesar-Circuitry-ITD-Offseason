@@ -7,7 +7,7 @@ import robot.constants;
 
 public class FConstants {
   static {
-    FollowerConstants.localizers = Localizers.THREE_WHEEL;
+    FollowerConstants.localizers = Localizers.PINPOINT;
 
     FollowerConstants.leftFrontMotorName = constants.DriveConstants.leftFrontMotorName;
     FollowerConstants.leftRearMotorName = constants.DriveConstants.leftRearMotorName;
@@ -22,11 +22,11 @@ public class FConstants {
 
     FollowerConstants.mass = 13;
 
-    FollowerConstants.xMovement = 57.8741;
-    FollowerConstants.yMovement = 52.295;
+    FollowerConstants.xMovement = 69.49399274350246;
+    FollowerConstants.yMovement = 48.23506582769686;
 
-    FollowerConstants.forwardZeroPowerAcceleration = -41.278;
-    FollowerConstants.lateralZeroPowerAcceleration = -59.7819;
+    FollowerConstants.forwardZeroPowerAcceleration = -43.93083856199569;
+    FollowerConstants.lateralZeroPowerAcceleration = -73.04883058653962;
 
     FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.1, 0, 0.01, 0);
     FollowerConstants.useSecondaryTranslationalPID = false;
