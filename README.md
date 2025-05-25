@@ -16,7 +16,7 @@ This repository provides a collection of code and resources developed by team 24
    ```bash
    git clone [https://github.com/CAESAR-CIRCUITRY/CAESAR-CIRCUITRY-ITD-STATE.git](https://github.com/CAESAR-CIRCUITRY/CAESAR-CIRCUITRY-ITD-STATE.git)
 
-2. **[Optional] Integrate with Your Project:**
+2. **Integrate with Your Project:**
    - Copy relevant files or modules into your existing FTC project.
    - Adapt the code to your specific robot hardware and game requirements.
 
