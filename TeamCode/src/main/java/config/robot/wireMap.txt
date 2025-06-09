@@ -1,0 +1,23 @@
+Control Hub
+
+----------------
+Motors:
+
+Servos:
+port 2: intakeClaw open value: .64 close value: .37
+port 3: intakeRotate intake ground: around 0 transfer: 0.45
+port 4: intakeClawPivot right: .08 middle: .62 left(not fully left just maxed out, better to use right ): 1
+port 5: intakeClawRotate (the one with the gears) ground: around 0 transfer: .75
+
+Expansion Hub
+
+----------------
+Motors:
+Port 0: output (Motor With Encoder)
+Port 1: intake (Motor With Encoder)
+
+Servos:
+port 2: outtakeClaw close: 0.16 open: .4
+port 3: outtakeRotate1(left servo) transfer: 1 specimen: .5 wall pickup: .2
+port 4: outtakeClawRotate transfer: .9 specimen: 0.4 wall pickup: .15
+port 5: outtakeRotate2 (not working at time of test bad wiring(swapped left and right), right servo)
