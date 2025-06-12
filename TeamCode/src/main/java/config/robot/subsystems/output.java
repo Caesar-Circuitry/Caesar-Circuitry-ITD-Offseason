@@ -12,6 +12,7 @@ public class output extends WSubsystem {
   public enum outputState {
     TRANSFER,
     HIGH_CHAMBER,
+    Place_Spec,
     wall_PICKUP,
     L2_ASCENT,
     L2_HANG,
@@ -109,6 +110,10 @@ public class output extends WSubsystem {
     setTargetState(outputState.wall_PICKUP);
   }
 
+  public void ScoreSpec() {
+    setTargetState(outputState.Place_Spec);
+  }
+
   private void switchState() {
     switch (targetState) {
       case TRANSFER:
@@ -126,6 +131,9 @@ public class output extends WSubsystem {
         this.m_servo_v4bar_targetPosition = constants.outputConstants.wallPickup;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateWallPickup;
         break;
+      case Place_Spec:
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barPlaceSpec;
+        this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
     }
   }
 
