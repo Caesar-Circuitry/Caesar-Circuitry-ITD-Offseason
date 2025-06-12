@@ -51,6 +51,7 @@ public class constants {
     public static final double v4barTransfer = 1;
     public static final double v4barHighBasket = 0.0;
     public static final double v4barHighChamber = .5;
+    public static final double v4barPlaceSpec = .85;
     public static final double wallPickup = .1;
     /*clawRotate servo target positions*/
     public static final double clawRotateTransfer = 0.93;
