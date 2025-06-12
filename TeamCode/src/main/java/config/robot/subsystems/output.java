@@ -12,8 +12,8 @@ public class output extends WSubsystem {
   public enum outputState {
     TRANSFER,
     HIGH_CHAMBER,
-    Place_Spec,
-    wall_PICKUP,
+    PLACE_SPEC,
+    WALL_PICKUP,
     L2_ASCENT,
     L2_HANG,
   }
@@ -107,11 +107,11 @@ public class output extends WSubsystem {
   }
 
   public void TargetWall() {
-    setTargetState(outputState.wall_PICKUP);
+    setTargetState(outputState.WALL_PICKUP);
   }
 
   public void ScoreSpec() {
-    setTargetState(outputState.Place_Spec);
+    setTargetState(outputState.PLACE_SPEC);
   }
 
   private void switchState() {
@@ -126,12 +126,12 @@ public class output extends WSubsystem {
         this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barHighChamber;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
         break;
-      case wall_PICKUP:
+      case WALL_PICKUP:
         setM_motor_targetPosition(constants.outputConstants.slideTransfer);
         this.m_servo_v4bar_targetPosition = constants.outputConstants.wallPickup;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateWallPickup;
         break;
-      case Place_Spec:
+      case PLACE_SPEC:
         this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barPlaceSpec;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
     }
