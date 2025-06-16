@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
+import com.seattlesolvers.solverslib.command.ScheduleCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
@@ -34,6 +35,11 @@ public class robot extends Robot {
   Trigger Right;
   Trigger notRight;
   Trigger Left;
+  Trigger OutClawClosed;
+
+  // GamePad2 Triggers
+  Button wallGrab;
+  Button placeSpec;
 
   // the constructor with a specified opmode type
   /**
@@ -83,16 +89,14 @@ public class robot extends Robot {
     Right = new Trigger(() -> rightTrigger.isDown());
     notRight = new Trigger(() -> !rightTrigger.isDown());
     Left = new Trigger(() -> leftTrigger.isDown());
+    OutClawClosed = new Trigger(() -> hardware.getOutput().isClawClosed());
+
+    // Operator Controls
+    wallGrab = new GamepadButton(operator, GamepadKeys.Button.RIGHT_BUMPER);
+    placeSpec = new GamepadButton(operator, GamepadKeys.Button.LEFT_BUMPER);
   }
 
   private void driverTriggerCommands() {
-    leftStickButton.toggleWhenPressed(
-        new SequentialCommandGroup(
-            new InstantCommand(hardware.getIntake()::clawOpen),
-            new InstantCommand(hardware.getOutput()::clawClose)),
-        new SequentialCommandGroup(
-            new InstantCommand(hardware.getIntake()::clawClose),
-            new InstantCommand(hardware.getOutput()::clawOpen)));
     share.whenPressed(new InstantCommand(hardware.getDrive()::switchCentric));
     rightStickButton.whenPressed(new InstantCommand(hardware.getDrive()::switchLock));
     PsButton.whenPressed(new InstantCommand(hardware.getDrive()::resetHeading));
@@ -101,10 +105,18 @@ public class robot extends Robot {
     Transfer.whenActive(new InstantCommand(hardware.getIntake()::HumanPlayer));
     rightBumper.and(Right).whenActive(hardware.getIntake()::ClawPivotRight);
     leftBumper.and(Right).whenActive(hardware.getIntake()::ClawPivotMiddle);
-    Left.and(new Trigger(() -> hardware.getOutput().isClawClosed()))
-        .whenActive(hardware.getOutput()::TargetHighChamber);
+    Left.and(OutClawClosed).whenActive(hardware.getOutput()::TargetHighChamber);
     Left.whenInactive(hardware.getOutput()::TargetTransfer);
     leftBumper.and(notRight).whenActive(hardware.getOutput()::TargetWall);
+
+    placeSpec.whenPressed(
+        new ScheduleCommand(
+            new InstantCommand(hardware.getOutput()::ScoreSpec),
+            new InstantCommand(hardware.getOutput()::clawOpen)));
+    wallGrab.toggleWhenPressed(
+        new SequentialCommandGroup(new InstantCommand(hardware.getOutput()::clawClose)),
+        new SequentialCommandGroup(new InstantCommand(hardware.getOutput()::clawOpen)));
+    // rightBumper.and(notRight).whenActive(hardware.getOutput()::clawClose);
   }
 
   public void read() {

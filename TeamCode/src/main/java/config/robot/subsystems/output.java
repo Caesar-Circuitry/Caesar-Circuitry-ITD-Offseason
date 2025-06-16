@@ -74,7 +74,7 @@ public class output extends WSubsystem {
   @Override
   public void loop() {
     m_pidfController.setSetPoint(m_motor_targetPosition);
-    if (Math.abs(m_pidfController.getPositionError()) >= constants.outputConstants.minError) {
+    if ((Math.abs(m_pidfController.getPositionError()) >= constants.outputConstants.minError)) {
       power = m_pidfController.calculate(m_currentPosition);
     } else {
       power = 0;
@@ -118,22 +118,22 @@ public class output extends WSubsystem {
     switch (targetState) {
       case TRANSFER:
         setM_motor_targetPosition(constants.outputConstants.slideTransfer);
-        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barTransfer;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateTransfer;
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barTransfer;
         break;
       case HIGH_CHAMBER:
         setM_motor_targetPosition(constants.outputConstants.slideHighChamber);
-        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barHighChamber;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barHighChamber;
         break;
       case WALL_PICKUP:
         setM_motor_targetPosition(constants.outputConstants.slideTransfer);
-        this.m_servo_v4bar_targetPosition = constants.outputConstants.wallPickup;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateWallPickup;
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.wallPickup;
         break;
       case PLACE_SPEC:
-        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barPlaceSpec;
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barPlaceSpec;
     }
   }
 

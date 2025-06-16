@@ -44,20 +44,20 @@ public class constants {
     public static final double slideTransfer = 0.0;
     public static final double slideWall = 0.0;
     public static final double slideHighBasket = 29;
-    public static final double slideHighChamber = 12;
+    public static final double slideHighChamber = -9 * ticksPerInch;
     public static final double slideL2Ascent = 0.0; // move up to hang
     public static final double slideL2Hang = 0.0; // move slide down to lift robot up;
     /*v4bar servo target positions*/
     public static final double v4barTransfer = 1;
     public static final double v4barHighBasket = 0.0;
-    public static final double v4barHighChamber = .5;
-    public static final double v4barPlaceSpec = .85;
-    public static final double wallPickup = .1;
+    public static final double v4barHighChamber = .3;
+    public static final double v4barPlaceSpec = .05;
+    public static final double wallPickup = 0;
     /*clawRotate servo target positions*/
-    public static final double clawRotateTransfer = 0.93;
+    public static final double clawRotateTransfer = 0.87;
     public static final double clawRotateHighBasket = 0.0;
-    public static final double clawRotateHighChamber = 0.15;
-    public static final double clawRotateWallPickup = 0.5;
+    public static final double clawRotateHighChamber = 0.3;
+    public static final double clawRotateWallPickup = 0.17;
     /*claw servo target positions*/
     public static final double clawOpen = .4;
     public static final double clawClose = 0.16;
@@ -104,7 +104,7 @@ public class constants {
 
     /*claw servo target positions*/
     public static final double clawOpen = .64;
-    public static final double clawClose = .37;
+    public static final double clawClose = .31;
 
     public static final int transferServoDelay = 0; // milliseconds
     public static final int subServoDelay = 0; // milliseconds
