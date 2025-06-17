@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.solversHardware.SolversMotor;
 import com.seattlesolvers.solverslib.solversHardware.SolversServo;
 
+import androidx.core.math.MathUtils;
 import config.helpers.control.springPIDF;
 import config.robot.constants;
 
@@ -88,7 +89,9 @@ public class intake extends WSubsystem {
   @Override
   public void loop() {
     switchCase();
-    power = m_pidfController.caculate(m_currentPosition, m_motor_targetPosition);
+    power =
+        MathUtils.clamp(
+            m_pidfController.caculate(m_currentPosition, m_motor_targetPosition), -1, 1);
   }
 
   @Override

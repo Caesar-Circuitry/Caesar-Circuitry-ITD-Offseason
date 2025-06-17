@@ -49,15 +49,15 @@ public class autoPath5 {
                 new Point(33.000, 51.750, Point.CARTESIAN),
                 new Point(grabSample1Pose)))
         .setLinearHeadingInterpolation(specimen0Pose.getHeading(), grabSample1Pose.getHeading())
-        .setPathEndTValueConstraint(.9)
+        // .setPathEndTValueConstraint(.9)
         .build();
   }
 
   public static PathChain hpSample1() {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(grabSample1Pose), new Point(hpSample1Pose)))
-        .setLinearHeadingInterpolation(grabSample1Pose.getHeading(), hpSample1Pose.getHeading())
-        .setPathEndTValueConstraint(.9)
+        .setConstantHeadingInterpolation(hpSample1Pose.getHeading())
+        // .setPathEndTValueConstraint(.9)
         .build();
   }
 
@@ -65,15 +65,15 @@ public class autoPath5 {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(hpSample1Pose), new Point(grabSample2Pose)))
         .setLinearHeadingInterpolation(hpSample1Pose.getHeading(), grabSample2Pose.getHeading())
-        .setPathEndTValueConstraint(.9)
+        // .setPathEndTValueConstraint(.9)
         .build();
   }
 
   public static PathChain hpSample2() {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(grabSample2Pose), new Point(hpSample2Pose)))
-        .setLinearHeadingInterpolation(grabSample2Pose.getHeading(), hpSample2Pose.getHeading())
-        .setPathEndTValueConstraint(.9)
+        .setConstantHeadingInterpolation(hpSample2Pose.getHeading())
+        // .setPathEndTValueConstraint(.9)
         .build();
   }
 
@@ -81,7 +81,7 @@ public class autoPath5 {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(hpSample2Pose), new Point(grabSample3Pose)))
         .setLinearHeadingInterpolation(hpSample2Pose.getHeading(), grabSample3Pose.getHeading())
-        .setPathEndTValueConstraint(.9)
+        // .setPathEndTValueConstraint(.9)
         .build();
   }
 
@@ -89,7 +89,7 @@ public class autoPath5 {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(grabSample3Pose), new Point(hpSample3Pose)))
         .setLinearHeadingInterpolation(grabSample3Pose.getHeading(), hpSample3Pose.getHeading())
-        .setPathEndTValueConstraint(.9)
+        // .setPathEndTValueConstraint(.9)
         .build();
   }
 

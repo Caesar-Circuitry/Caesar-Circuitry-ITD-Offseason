@@ -1,5 +1,6 @@
 package config.robot;
 
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class constants {
@@ -22,6 +23,7 @@ public class constants {
         DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction rightRearMotorDirection =
         DcMotorSimple.Direction.FORWARD;
+    public static final Pose wallGrab = new Pose(14.000, 37.000, Math.toRadians(0));
   }
 
   public static class outputConstants {
@@ -44,7 +46,8 @@ public class constants {
     public static final double slideTransfer = 0.0;
     public static final double slideWall = 0.0;
     public static final double slideHighBasket = 29;
-    public static final double slideHighChamber = -9 * ticksPerInch;
+    public static final double slideHighChamber = 10 * ticksPerInch;
+    public static final double slideHighChamberClip = 0;
     public static final double slideL2Ascent = 0.0; // move up to hang
     public static final double slideL2Hang = 0.0; // move slide down to lift robot up;
     /*v4bar servo target positions*/
@@ -85,7 +88,7 @@ public class constants {
     /*vertical slides target positions*/
     public static final double slideTransfer = 0.0;
     public static final double slideGroundPickup = 0.0;
-    public static final double slideSub = 10.0 * ticksPerInch;
+    public static double slideSub = 10.0 * ticksPerInch;
     public static final double slideZero = 0.0;
     /*Rotate servo target positions*/
     public static final double RotateTransfer = 0.42;

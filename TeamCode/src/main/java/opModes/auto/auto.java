@@ -3,6 +3,7 @@ package opModes.auto;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
@@ -11,34 +12,46 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import config.paths.autoPath5;
 import config.pedroPathing.constants.FConstants;
 import config.pedroPathing.constants.LConstants;
+import config.robot.robot;
+import config.robot.subsystems.robotHardware;
 
 /** Autonomous OpMode implementation */
 @Autonomous
 public class auto extends CommandOpMode {
-  // private robot robot;
+  private robot robot;
   private Follower follower;
 
   @Override
   public void initialize() {
     super.reset();
     // Initialize the robot for autonomous mode
-    // robot = new robot(hardwareMap);
+    robot = new robot(hardwareMap);
 
     // Get the follower from the robot hardware
-    // robotHardware hardware = robot.getHardware();
-    follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+    robotHardware hardware = robot.getHardware();
+    follower = hardware.getFollower();
     follower.setStartingPose(autoPath5.startPose);
+    follower.setupConstants(FConstants.class, LConstants.class);
 
     // Create the autonomous path
 
     // Create a sequential command group for the autonomous routine
     SequentialCommandGroup autonomousRoutine =
         new SequentialCommandGroup(
+            new InstantCommand(hardware.getOutput()::clawClose),
+            new InstantCommand(hardware.getOutput()::TargetHighChamber),
             new FollowPathCommand(follower, autoPath5.specimen0(), true),
-            new WaitCommand(500),
+            new InstantCommand(hardware.getOutput()::ScoreSpec),
+            new WaitCommand(50),
+            new InstantCommand(hardware.getOutput()::clawOpen),
+            new WaitCommand(100),
+            new InstantCommand(hardware.getOutput()::TargetTransfer),
             new FollowPathCommand(follower, autoPath5.grabSample1(), true),
-            new WaitCommand(1000),
+            new InstantCommand(hardware.getIntake()::HoverPickup),
+            new InstantCommand(hardware.getIntake()::clawClose),
+            new WaitCommand(100),
             new FollowPathCommand(follower, autoPath5.hpSample1(), true),
+            new InstantCommand(hardware.getIntake()::clawOpen),
             new FollowPathCommand(follower, autoPath5.grabSample2(), true),
             new WaitCommand(1000),
             new FollowPathCommand(follower, autoPath5.hpSample2(), true),
@@ -63,7 +76,11 @@ public class auto extends CommandOpMode {
             new WaitCommand(500));
 
     // Schedule commands through the robot instance
-    schedule(new RunCommand(follower::update), autonomousRoutine);
+    schedule(
+        new RunCommand(this.robot::read),
+        new RunCommand(this.robot::loop),
+        new RunCommand(this.robot::write),
+        autonomousRoutine);
   }
 
   @Override

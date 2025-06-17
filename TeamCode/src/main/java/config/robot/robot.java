@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.Robot;
 import com.seattlesolvers.solverslib.command.ScheduleCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -19,6 +20,7 @@ public class robot extends Robot {
   private HardwareMap hardwareMap;
   private robotHardware hardware;
   private GamepadEx driver, operator;
+  private boolean isTeleOp = true;
 
   // GamePad1 Triggers
   Button leftStickButton; // toggle claw
@@ -36,6 +38,7 @@ public class robot extends Robot {
   Trigger notRight;
   Trigger Left;
   Trigger OutClawClosed;
+  Trigger autoDrive;
 
   // GamePad2 Triggers
   Button wallGrab;
@@ -64,13 +67,16 @@ public class robot extends Robot {
     this.driver = new GamepadEx(gamepad1);
     this.operator = new GamepadEx(gamepad2);
     hardware.getFollower().startTeleopDrive();
+    isTeleOp = true;
     driverTriggers();
     driverTriggerCommands();
   }
 
   public void initAuto() {
     // initialize auto-specific scheduler
+    constants.intakeConstants.slideSub = 0;
     hardware = new robotHardware(hardwareMap);
+    isTeleOp = false;
   }
 
   private void driverTriggers() {
@@ -90,6 +96,7 @@ public class robot extends Robot {
     notRight = new Trigger(() -> !rightTrigger.isDown());
     Left = new Trigger(() -> leftTrigger.isDown());
     OutClawClosed = new Trigger(() -> hardware.getOutput().isClawClosed());
+    autoDrive = new Trigger(() -> operator.getButton(GamepadKeys.Button.CROSS));
 
     // Operator Controls
     wallGrab = new GamepadButton(operator, GamepadKeys.Button.RIGHT_BUMPER);
@@ -108,21 +115,26 @@ public class robot extends Robot {
     Left.and(OutClawClosed).whenActive(hardware.getOutput()::TargetHighChamber);
     Left.whenInactive(hardware.getOutput()::TargetTransfer);
     leftBumper.and(notRight).whenActive(hardware.getOutput()::TargetWall);
-
+    autoDrive.whenActive(hardware.getDrive()::autoDrive);
+    autoDrive.whenInactive(hardware.getDrive()::TeleOp);
     placeSpec.whenPressed(
         new ScheduleCommand(
-            new InstantCommand(hardware.getOutput()::ScoreSpec),
-            new InstantCommand(hardware.getOutput()::clawOpen)));
-    wallGrab.toggleWhenPressed(
-        new SequentialCommandGroup(new InstantCommand(hardware.getOutput()::clawClose)),
-        new SequentialCommandGroup(new InstantCommand(hardware.getOutput()::clawOpen)));
+            new SequentialCommandGroup(
+                new InstantCommand(hardware.getOutput()::ScoreSpec),
+                new WaitCommand(100),
+                new InstantCommand(hardware.getOutput()::clawOpen),
+                new WaitCommand(100),
+                new InstantCommand(hardware.getOutput()::TargetTransfer))));
+    wallGrab.whenPressed(new InstantCommand(hardware.getOutput()::switchClaw));
     // rightBumper.and(notRight).whenActive(hardware.getOutput()::clawClose);
   }
 
   public void read() {
-    rightTrigger.readValue();
-    leftTrigger.readValue();
-    driver.readButtons();
+    if (isTeleOp) {
+      rightTrigger.readValue();
+      leftTrigger.readValue();
+      driver.readButtons();
+    }
     hardware.read();
   }
 

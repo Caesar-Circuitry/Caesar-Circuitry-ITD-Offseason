@@ -5,8 +5,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.PathBuilder;
+import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.PIDFController;
 import com.seattlesolvers.solverslib.geometry.Vector2d;
+
+import config.robot.constants;
 
 public class drive extends WSubsystem {
   public enum driveState {
@@ -19,7 +24,6 @@ public class drive extends WSubsystem {
   private driveState currentDriveState = driveState.ROBOT_CENTRIC_UNLOCKED;
   private final robotHardware hardware;
   private final Follower follower;
-  private double lockedHeading = 0;
   private double currentHeading = 0;
   private Vector2d driveVector = new Vector2d(0, 0);
   private double driverotation = 0;
@@ -33,6 +37,7 @@ public class drive extends WSubsystem {
   public drive(robotHardware hardware) {
     this.hardware = hardware;
     follower = this.hardware.getFollower();
+    follower.setStartingPose(new Pose(14.000, 37.000, Math.toRadians(0)));
   }
 
   @Override
@@ -131,24 +136,25 @@ public class drive extends WSubsystem {
     }
   }
 
-  public void LockedHeading0() {
-    this.lockedHeading = 0;
-  }
-
-  public void LockedHeading90() {
-    this.lockedHeading = 90;
-  }
-
-  public void LockedHeading180() {
-    this.lockedHeading = 180;
-  }
-
-  public void LockedHeading270() {
-    this.lockedHeading = 270;
-  }
-
   public void resetHeading() {
     follower.setPose(new Pose(follower.getPose().getX(), follower.getPose().getY(), 0));
+  }
+
+  public void autoDrive() {
+    follower.breakFollowing();
+    follower.followPath(
+        new PathBuilder()
+            .addPath(
+                new BezierLine(
+                    new Point(follower.getPose()), new Point(constants.DriveConstants.wallGrab)))
+            .setLinearHeadingInterpolation(
+                follower.getPose().getHeading(), constants.DriveConstants.wallGrab.getHeading())
+            .build());
+  }
+
+  public void TeleOp() {
+    follower.breakFollowing();
+    follower.startTeleopDrive();
   }
 
   private double headingLogic() {

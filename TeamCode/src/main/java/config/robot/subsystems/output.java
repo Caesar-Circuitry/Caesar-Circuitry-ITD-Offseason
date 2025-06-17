@@ -1,10 +1,12 @@
 package config.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.controller.PIDFController;
-import com.seattlesolvers.solverslib.solversHardware.SolversMotor;
 import com.seattlesolvers.solverslib.solversHardware.SolversServo;
+import com.seattlesolvers.solverslib.util.MathUtils;
 
 import config.robot.constants;
 
@@ -18,10 +20,17 @@ public class output extends WSubsystem {
     L2_HANG,
   }
 
+  private enum clawState {
+    OPEN,
+    CLOSE
+  }
+
+  public clawState ClawState = clawState.OPEN;
+
   private outputState targetState = outputState.TRANSFER;
   private final robotHardware hardware;
 
-  private final SolversMotor m_motor;
+  private final DcMotorEx m_motor;
   private final PIDFController m_pidfController;
 
   private final SolversServo m_servo_v4bar;
@@ -39,9 +48,9 @@ public class output extends WSubsystem {
   public output(robotHardware Hardware) {
     this.hardware = Hardware;
     this.m_motor =
-        new SolversMotor(
-            hardware.getHardwareMap().get(DcMotor.class, constants.outputConstants.motorName),
-            constants.outputConstants.motorCachingFactor);
+        Hardware.getHardwareMap().get(DcMotorEx.class, constants.outputConstants.motorName);
+    this.m_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    this.m_motor.setDirection(DcMotorSimple.Direction.REVERSE);
     this.m_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     this.m_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     this.m_servo_v4bar =
@@ -68,14 +77,14 @@ public class output extends WSubsystem {
 
   @Override
   public void read() {
-    this.m_currentPosition = m_motor.getPosition();
+    this.m_currentPosition = m_motor.getCurrentPosition();
   }
 
   @Override
   public void loop() {
     m_pidfController.setSetPoint(m_motor_targetPosition);
     if ((Math.abs(m_pidfController.getPositionError()) >= constants.outputConstants.minError)) {
-      power = m_pidfController.calculate(m_currentPosition);
+      power = MathUtils.clamp(m_pidfController.calculate(this.m_currentPosition), -1, 1);
     } else {
       power = 0;
     }
@@ -134,15 +143,29 @@ public class output extends WSubsystem {
       case PLACE_SPEC:
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
         this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barPlaceSpec;
+        setM_motor_targetPosition(constants.outputConstants.slideHighChamberClip);
     }
   }
 
   public void clawOpen() {
+    ClawState = clawState.OPEN;
     this.m_servo_claw_targetPosition = constants.outputConstants.clawOpen;
   }
 
   public void clawClose() {
+    ClawState = clawState.CLOSE;
     this.m_servo_claw_targetPosition = constants.outputConstants.clawClose;
+  }
+
+  public void switchClaw() {
+    switch (ClawState) {
+      case OPEN:
+        clawClose();
+        break;
+      case CLOSE:
+        clawOpen();
+        break;
+    }
   }
 
   public boolean isClawClosed() {
@@ -151,5 +174,13 @@ public class output extends WSubsystem {
     } else {
       return false;
     }
+  }
+
+  public double getM_motor_power() {
+    return this.power;
+  }
+
+  public double getM_currentPosition() {
+    return this.m_currentPosition;
   }
 }

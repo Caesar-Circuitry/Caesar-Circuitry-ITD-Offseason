@@ -32,6 +32,8 @@ public class teleOp extends CommandOpMode {
             -gamepad1.left_stick_x * .75,
             -gamepad1.right_stick_x / 2);
     telemetry.addData("state", this.robot.getHardware().getDrive().getState());
+    telemetry.addData("outtakePower", this.robot.getHardware().getOutput().getM_motor_power());
+    telemetry.addData("outtakePower", this.robot.getHardware().getOutput().getM_currentPosition());
     telemetry.update();
   }
 }
