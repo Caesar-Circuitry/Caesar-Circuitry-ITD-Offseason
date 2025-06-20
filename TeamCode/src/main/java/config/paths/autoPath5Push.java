@@ -11,31 +11,30 @@ public class autoPath5Push {
   // start pose
   // start poses
   public static final Pose startPose = new Pose(9.000, 65.00, Math.toRadians(180));
-  private static final Pose specimen0Pose = new Pose(38.000, 67.00, Math.toRadians(180));
+  private static final Pose specimen0Pose = new Pose(37.000, 67.00, Math.toRadians(180));
 
   // sample poses
-  private static final Pose Sample1Pose = new Pose(12.243, 21.187, Math.toRadians(0));
-  private static final Pose Sample2Pose =
-      new Pose(12.243122009569378, 12.22966507177033, Math.toRadians(0));
-  private static final Pose Sample3Pose =
-      new Pose(11.898624401913876, 8.095693779904312, Math.toRadians(0));
+  private static final Pose Sample1Pose = new Pose(16, 21, Math.toRadians(0));
+  private static final Pose Sample2Pose = new Pose(20, 12, Math.toRadians(0));
+  private static final Pose ToWall1 = new Pose(13.5, 12, Math.toRadians(0));
+  private static final Pose ToWall2 = new Pose(13.5, 34, Math.toRadians(0));
 
   // grab specimen poses
   private static final Pose grabSpecimen1Pose = new Pose(14.000, 13.000, Math.toRadians(0));
-  private static final Pose grabSpecimen2Pose = new Pose(14.000, 37.000, Math.toRadians(0));
-  private static final Pose grabSpecimen3Pose = new Pose(14.000, 37.000, Math.toRadians(0));
-  private static final Pose grabSpecimen4Pose = new Pose(14.000, 37.000, Math.toRadians(0));
+  private static final Pose grabSpecimen2Pose = new Pose(20, 34.000, Math.toRadians(0));
+  private static final Pose grabSpecimen3Pose = new Pose(20, 34.000, Math.toRadians(0));
 
   // place specimen poses
-  private static final Pose placeSpecimen1Pose = new Pose(36.000, 64.000, Math.toRadians(180));
-  private static final Pose placeSpecimen2Pose = new Pose(36.000, 65.000, Math.toRadians(180));
-  private static final Pose placeSpecimen3Pose = new Pose(36.000, 66.000, Math.toRadians(180));
-  private static final Pose placeSpecimen4Pose = new Pose(36.000, 66.000, Math.toRadians(180));
+  private static final Pose placeSpecimen1Pose = new Pose(37.000, 66, Math.toRadians(180));
+  private static final Pose placeSpecimen2Pose = new Pose(37.000, 67, Math.toRadians(180));
+  private static final Pose placeSpecimen3Pose = new Pose(37.000, 68, Math.toRadians(180));
+
+  private static final Pose parkPose = new Pose(20, 26, Math.toRadians(0));
 
   public static PathChain specimen0() {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(startPose), new Point(specimen0Pose)))
-        .setLinearHeadingInterpolation(startPose.getHeading(), specimen0Pose.getHeading())
+        .setConstantHeadingInterpolation(startPose.getHeading())
         .build();
   }
 
@@ -44,11 +43,11 @@ public class autoPath5Push {
         .addPath(
             new BezierCurve(
                 new Point(specimen0Pose),
-                new Point(13.449, 32.727, Point.CARTESIAN),
-                new Point(103.535, 18.603, Point.CARTESIAN),
-                new Point(45.487, 22.565, Point.CARTESIAN),
+                new Point(14.5, 14.5, Point.CARTESIAN),
+                new Point(73, 59.25, Point.CARTESIAN),
+                new Point(89.5, 17, Point.CARTESIAN),
                 new Point(Sample1Pose)))
-        .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
+        .setConstantHeadingInterpolation(Math.toRadians(0))
         .build();
   }
 
@@ -57,22 +56,24 @@ public class autoPath5Push {
         .addPath(
             new BezierCurve(
                 new Point(Sample1Pose),
-                new Point(72.186, 39.100, Point.CARTESIAN),
-                new Point(91.305, 6.201, Point.CARTESIAN),
+                new Point(48, 34, Point.CARTESIAN),
+                new Point(107, 13.5, Point.CARTESIAN),
                 new Point(Sample2Pose)))
-        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+        .setConstantHeadingInterpolation((Math.toRadians(0)))
         .build();
   }
 
-  public static PathChain Sample3() {
+  public static PathChain GrabOffWall1() {
     return new PathBuilder()
-        .addPath(
-            new BezierCurve(
-                new Point(Sample2Pose),
-                new Point(110.08044258373205, 8.612440191387565, Point.CARTESIAN),
-                new Point(91.305, 6.201, Point.CARTESIAN),
-                new Point(Sample3Pose)))
-        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+        .addPath(new BezierCurve(new Point(Sample2Pose), new Point(ToWall1)))
+        .setConstantHeadingInterpolation(0)
+        .build();
+  }
+
+  public static PathChain GrabOffWall2() {
+    return new PathBuilder()
+        .addPath(new BezierCurve(new Point(grabSpecimen2Pose), new Point(ToWall2)))
+        .setConstantHeadingInterpolation(0)
         .build();
   }
 
@@ -80,29 +81,30 @@ public class autoPath5Push {
     return new PathBuilder()
         .addPath(
             new BezierCurve(
-                new Point(Sample3Pose),
+                new Point(ToWall1),
                 new Point(34.000, 12.750, Point.CARTESIAN),
                 new Point(29.000, 37.500, Point.CARTESIAN),
                 new Point(20.000, 61.000, Point.CARTESIAN),
                 new Point(placeSpecimen1Pose)))
-        .setLinearHeadingInterpolation(
-            grabSpecimen1Pose.getHeading(), placeSpecimen1Pose.getHeading())
+        .setLinearHeadingInterpolation(Math.toRadians(0), placeSpecimen1Pose.getHeading())
         .build();
   }
 
   public static PathChain grabSpecimen2() {
     return new PathBuilder()
         .addPath(new BezierLine(new Point(placeSpecimen1Pose), new Point(grabSpecimen2Pose)))
-        .setLinearHeadingInterpolation(
-            placeSpecimen1Pose.getHeading(), grabSpecimen2Pose.getHeading())
+        .setLinearHeadingInterpolation(placeSpecimen1Pose.getHeading(), ToWall2.getHeading())
         .build();
   }
 
   public static PathChain placeSpecimen2() {
     return new PathBuilder()
-        .addPath(new BezierLine(new Point(grabSpecimen2Pose), new Point(placeSpecimen2Pose)))
-        .setLinearHeadingInterpolation(
-            grabSpecimen2Pose.getHeading(), placeSpecimen2Pose.getHeading())
+        .addPath(
+            new BezierCurve(
+                new Point(ToWall2),
+                new Point(17, 55, Point.CARTESIAN),
+                new Point(placeSpecimen2Pose)))
+        .setLinearHeadingInterpolation(ToWall2.getHeading(), placeSpecimen2Pose.getHeading())
         .build();
   }
 
@@ -116,25 +118,20 @@ public class autoPath5Push {
 
   public static PathChain placeSpecimen3() {
     return new PathBuilder()
-        .addPath(new BezierLine(new Point(grabSpecimen3Pose), new Point(placeSpecimen3Pose)))
+        .addPath(
+            new BezierCurve(
+                new Point(grabSpecimen3Pose),
+                new Point(17, 55, Point.CARTESIAN),
+                new Point(placeSpecimen3Pose)))
         .setLinearHeadingInterpolation(
             grabSpecimen3Pose.getHeading(), placeSpecimen3Pose.getHeading())
         .build();
   }
 
-  public static PathChain grabSpecimen4() {
+  public static PathChain park() {
     return new PathBuilder()
-        .addPath(new BezierLine(new Point(placeSpecimen3Pose), new Point(grabSpecimen4Pose)))
-        .setLinearHeadingInterpolation(
-            placeSpecimen3Pose.getHeading(), grabSpecimen4Pose.getHeading())
-        .build();
-  }
-
-  public static PathChain placeSpecimen4() {
-    return new PathBuilder()
-        .addPath(new BezierLine(new Point(grabSpecimen4Pose), new Point(placeSpecimen4Pose)))
-        .setLinearHeadingInterpolation(
-            grabSpecimen4Pose.getHeading(), placeSpecimen4Pose.getHeading())
+        .addPath(new BezierLine(new Point(placeSpecimen3Pose), new Point(parkPose)))
+        .setLinearHeadingInterpolation(placeSpecimen3Pose.getHeading(), parkPose.getHeading())
         .build();
   }
 }

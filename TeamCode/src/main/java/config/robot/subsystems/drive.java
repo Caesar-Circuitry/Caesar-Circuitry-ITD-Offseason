@@ -140,7 +140,7 @@ public class drive extends WSubsystem {
     follower.setPose(new Pose(follower.getPose().getX(), follower.getPose().getY(), 0));
   }
 
-  public void autoDrive() {
+  public void autoDriveWall() {
     follower.breakFollowing();
     follower.followPath(
         new PathBuilder()
@@ -149,6 +149,18 @@ public class drive extends WSubsystem {
                     new Point(follower.getPose()), new Point(constants.DriveConstants.wallGrab)))
             .setLinearHeadingInterpolation(
                 follower.getPose().getHeading(), constants.DriveConstants.wallGrab.getHeading())
+            .build());
+  }
+
+  public void autoDriveChamber() {
+    follower.breakFollowing();
+    follower.followPath(
+        new PathBuilder()
+            .addPath(
+                new BezierLine(
+                    new Point(follower.getPose()), new Point(constants.DriveConstants.ChamberPose)))
+            .setLinearHeadingInterpolation(
+                follower.getPose().getHeading(), constants.DriveConstants.ChamberPose.getHeading())
             .build());
   }
 
@@ -170,6 +182,18 @@ public class drive extends WSubsystem {
       }
     }
     return headingCorrection;
+  }
+
+  public void switchDriveMagnitude() {
+    if (Math.signum(constants.DriveConstants.driveMagnitude) == 1) {
+      constants.DriveConstants.driveMagnitude = -1;
+    } else {
+      constants.DriveConstants.driveMagnitude = 1;
+    }
+  }
+
+  public void setTeleStartPose(Pose pose) {
+    constants.DriveConstants.startPose = pose;
   }
 
   public driveState getState() {

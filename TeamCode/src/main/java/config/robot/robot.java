@@ -38,7 +38,11 @@ public class robot extends Robot {
   Trigger notRight;
   Trigger Left;
   Trigger OutClawClosed;
-  Trigger autoDrive;
+  Trigger autoDriveWall;
+  Trigger autoDriveChamber;
+  Trigger cancelAutoDrive;
+  Trigger reverseDriveChamber;
+  Trigger lowBasket;
 
   // GamePad2 Triggers
   Button wallGrab;
@@ -68,13 +72,13 @@ public class robot extends Robot {
     this.operator = new GamepadEx(gamepad2);
     hardware.getFollower().startTeleopDrive();
     isTeleOp = true;
+    hardware.getFollower().setStartingPose(constants.DriveConstants.startPose);
     driverTriggers();
     driverTriggerCommands();
   }
 
   public void initAuto() {
     // initialize auto-specific scheduler
-    constants.intakeConstants.slideSub = 0;
     hardware = new robotHardware(hardwareMap);
     isTeleOp = false;
   }
@@ -96,11 +100,17 @@ public class robot extends Robot {
     notRight = new Trigger(() -> !rightTrigger.isDown());
     Left = new Trigger(() -> leftTrigger.isDown());
     OutClawClosed = new Trigger(() -> hardware.getOutput().isClawClosed());
-    autoDrive = new Trigger(() -> operator.getButton(GamepadKeys.Button.CROSS));
+    autoDriveWall = new Trigger(() -> operator.getButton(GamepadKeys.Button.CROSS));
+    autoDriveChamber = new Trigger(() -> operator.getButton(GamepadKeys.Button.DPAD_DOWN));
+    reverseDriveChamber = new Trigger(() -> hardware.getOutput().isChamber());
+    //    cancelAutoDrive =
+    //        new Trigger(() -> operator.getButton(GamepadKeys.Button.DPAD_DOWN))
+    //            .and(new Trigger(() -> operator.getButton(GamepadKeys.Button.CROSS)));
 
     // Operator Controls
     wallGrab = new GamepadButton(operator, GamepadKeys.Button.RIGHT_BUMPER);
     placeSpec = new GamepadButton(operator, GamepadKeys.Button.LEFT_BUMPER);
+    lowBasket = new GamepadButton(operator, GamepadKeys.Button.DPAD_UP);
   }
 
   private void driverTriggerCommands() {
@@ -115,17 +125,20 @@ public class robot extends Robot {
     Left.and(OutClawClosed).whenActive(hardware.getOutput()::TargetHighChamber);
     Left.whenInactive(hardware.getOutput()::TargetTransfer);
     leftBumper.and(notRight).whenActive(hardware.getOutput()::TargetWall);
-    autoDrive.whenActive(hardware.getDrive()::autoDrive);
-    autoDrive.whenInactive(hardware.getDrive()::TeleOp);
+    autoDriveWall.whenActive(hardware.getDrive()::autoDriveWall);
+    autoDriveWall.whenInactive(hardware.getDrive()::TeleOp);
     placeSpec.whenPressed(
         new ScheduleCommand(
             new SequentialCommandGroup(
                 new InstantCommand(hardware.getOutput()::ScoreSpec),
-                new WaitCommand(100),
+                new WaitCommand(200),
                 new InstantCommand(hardware.getOutput()::clawOpen),
                 new WaitCommand(100),
                 new InstantCommand(hardware.getOutput()::TargetTransfer))));
     wallGrab.whenPressed(new InstantCommand(hardware.getOutput()::switchClaw));
+    reverseDriveChamber.whenActive(hardware.getDrive()::switchDriveMagnitude);
+    reverseDriveChamber.whenInactive(hardware.getDrive()::switchDriveMagnitude);
+    lowBasket.whenActive(new InstantCommand(hardware.getOutput()::TargetLowBasket));
     // rightBumper.and(notRight).whenActive(hardware.getOutput()::clawClose);
   }
 

@@ -15,6 +15,8 @@ public class constants {
     public static final String rightFrontMotorName = "FRM";
     public static final String rightRearMotorName = "BRM";
 
+    public static double driveMagnitude = 1;
+
     public static final DcMotorSimple.Direction leftFrontMotorDirection =
         DcMotorSimple.Direction.REVERSE;
     public static final DcMotorSimple.Direction leftRearMotorDirection =
@@ -23,7 +25,9 @@ public class constants {
         DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction rightRearMotorDirection =
         DcMotorSimple.Direction.FORWARD;
-    public static final Pose wallGrab = new Pose(14.000, 37.000, Math.toRadians(0));
+    public static final Pose wallGrab = new Pose(21.000, 37.000, Math.toRadians(0));
+    public static final Pose ChamberPose = new Pose(32.000, 67.000, Math.toRadians(180));
+    public static Pose startPose = new Pose(21.000, 37.000, Math.toRadians(0));
   }
 
   public static class outputConstants {
@@ -48,8 +52,8 @@ public class constants {
     public static final double slideHighBasket = 29;
     public static final double slideHighChamber = 10 * ticksPerInch;
     public static final double slideHighChamberClip = 0;
-    public static final double slideL2Ascent = 0.0; // move up to hang
-    public static final double slideL2Hang = 0.0; // move slide down to lift robot up;
+    public static final double slideL2Ascent = 31 * ticksPerInch; // move up to hang
+    public static final double slideL2Hang = 20 * ticksPerInch; // move slide down to lift robot up;
     /*v4bar servo target positions*/
     public static final double v4barTransfer = 1;
     public static final double v4barHighBasket = 0.0;
@@ -91,7 +95,7 @@ public class constants {
     public static double slideSub = 10.0 * ticksPerInch;
     public static final double slideZero = 0.0;
     /*Rotate servo target positions*/
-    public static final double RotateTransfer = 0.42;
+    public static final double RotateTransfer = 0.4;
     public static final double RotateSub = 0.0;
     public static final double RotateHp = .42;
     public static final double RotateHover = .05;

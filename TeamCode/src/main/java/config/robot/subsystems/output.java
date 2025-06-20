@@ -18,6 +18,7 @@ public class output extends WSubsystem {
     WALL_PICKUP,
     L2_ASCENT,
     L2_HANG,
+    LOW_BASKET
   }
 
   private enum clawState {
@@ -115,12 +116,22 @@ public class output extends WSubsystem {
     setTargetState(outputState.HIGH_CHAMBER);
   }
 
+  public void TargetLowBasket() {
+    setTargetState(outputState.LOW_BASKET);
+  }
+
   public void TargetWall() {
     setTargetState(outputState.WALL_PICKUP);
   }
 
   public void ScoreSpec() {
     setTargetState(outputState.PLACE_SPEC);
+  }
+
+  public void Hang() {
+    switch (targetState) {
+      case L2_ASCENT:
+    }
   }
 
   private void switchState() {
@@ -144,6 +155,14 @@ public class output extends WSubsystem {
         this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateHighChamber;
         this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barPlaceSpec;
         setM_motor_targetPosition(constants.outputConstants.slideHighChamberClip);
+      case L2_ASCENT:
+        setM_motor_targetPosition(constants.outputConstants.slideL2Ascent);
+        this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateTransfer;
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barTransfer;
+      case L2_HANG:
+        setM_motor_targetPosition(constants.outputConstants.slideL2Hang);
+        this.m_servo_clawRotate_targetPosition = constants.outputConstants.clawRotateTransfer;
+        this.m_servo_v4bar_targetPosition = constants.outputConstants.v4barTransfer;
     }
   }
 
@@ -178,6 +197,10 @@ public class output extends WSubsystem {
 
   public double getM_motor_power() {
     return this.power;
+  }
+
+  public boolean isChamber() {
+    return targetState == outputState.HIGH_CHAMBER;
   }
 
   public double getM_currentPosition() {

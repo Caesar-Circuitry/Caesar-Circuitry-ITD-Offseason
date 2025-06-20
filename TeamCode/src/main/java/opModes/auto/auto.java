@@ -2,6 +2,7 @@ package opModes.auto;
 
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
@@ -16,7 +17,8 @@ import config.robot.robot;
 import config.robot.subsystems.robotHardware;
 
 /** Autonomous OpMode implementation */
-@Autonomous
+@Disabled
+@Autonomous(group = "auto")
 public class auto extends CommandOpMode {
   private robot robot;
   private Follower follower;
